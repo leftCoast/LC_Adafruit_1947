@@ -1,6 +1,39 @@
 #include "adafruit_1947_Obj.h"
 
 
+
+// **********************************************************
+//								clipRecILI9341
+//		  Adafruit_ILI9341 with a clipping rectangle added.	
+// **********************************************************
+
+
+clipRecILI9341::clipRecILI9341(int cs, int rst)
+	:clipRect(),
+	Adafruit_ILI9341(cs,LC_DC,rst) { }
+	
+	
+clipRecILI9341::~clipRecILI9341(void) {  }
+	
+void clipRecILI9341::drawPixel(int16_t x, int16_t y, uint16_t color) {
+
+	if (!mClipRect) { Adafruit_ILI9341::drawPixel(x,y,color); }
+	else if (mClipRect->inRect(x,y)) { Adafruit_ILI9341::drawPixel(x,y,color); }
+}
+
+void clipRecILI9341::writePixel(int16_t x, int16_t y, uint16_t color) {
+
+	if (!mClipRect) { Adafruit_ILI9341::writePixel(x,y,color); }
+	else if (mClipRect->inRect(x,y)) { Adafruit_ILI9341::writePixel(x,y,color); }
+}
+
+
+
+// **********************************************************
+//								adafruit_1947_Obj	
+// **********************************************************
+
+
 adafruit_1947_Obj::adafruit_1947_Obj(void)
 :displayObj(true,true,true,true,false) {
     
@@ -37,11 +70,15 @@ adafruit_1947_Obj::~adafruit_1947_Obj(void) {
 	}
 }
 
+rect cRect;
 
 bool adafruit_1947_Obj::dispObjBegin(void) { 
 
-  theTFT = new Adafruit_ILI9341(cs,LC_DC,rst);
+	cRect.setRect(100,100,50,50);
+  //theTFT = new Adafruit_ILI9341(cs,LC_DC,rst);
   //theTFT = new ILI9341_t3(cs,LC_DC,rst);
+  theTFT = new clipRecILI9341(cs,rst);
+  //theTFT->setClipRect(&cRect);
   if (theTFT!=NULL) {
     cTS = new Adafruit_FT6206();
     if (cTS!=NULL) {

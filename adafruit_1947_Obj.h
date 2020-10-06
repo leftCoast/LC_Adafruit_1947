@@ -9,6 +9,7 @@
 #include <LC_SPI.h>
 #include <baseGraphics.h>
 #include <displayObj.h>
+#include <clipRect.h>
 
 // Shield version
 #define ADA_1947_SHIELD_CS		10
@@ -24,6 +25,21 @@
 #ifndef swap
 #define swap(a, b) { int16_t t = a; a = b; b = t; }
 #endif
+
+
+
+class clipRecILI9341 :	public Adafruit_ILI9341,
+								public clipRect {
+								
+	public :
+				clipRecILI9341(int cs, int rst);
+	virtual	~clipRecILI9341(void);
+	
+	virtual	void drawPixel(int16_t x, int16_t y, uint16_t color);
+	virtual	void writePixel(int16_t x, int16_t y, uint16_t color);
+};
+
+
 
 class adafruit_1947_Obj : public displayObj {
 
@@ -65,8 +81,9 @@ class adafruit_1947_Obj : public displayObj {
   
 	private:
 				Adafruit_FT6206*	cTS;
-				Adafruit_ILI9341*	theTFT;
+				//Adafruit_ILI9341*	theTFT;
 				//ILI9341_t3*			theTFT;
+				clipRecILI9341*		theTFT;
 				byte					cs;
 				byte					rst;
 				bool					lastTouch;
