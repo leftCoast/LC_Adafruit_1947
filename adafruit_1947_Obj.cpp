@@ -3,28 +3,39 @@
 
 
 // **********************************************************
-//								clipRecILI9341
-//		  Adafruit_ILI9341 with a clipping rectangle added.	
+//								maskableILI9341
+//	Adafruit_ILI9341 with the ability to have a mask added.	
 // **********************************************************
 
+mask* gMask = NULL;
 
-clipRecILI9341::clipRecILI9341(int cs, int rst)
-	:clipRect(),
-	Adafruit_ILI9341(cs,LC_DC,rst) { }
+maskableILI9341::maskableILI9341(int cs, int rst)
+	: Adafruit_ILI9341(cs,LC_DC,rst) { }
 	
 	
-clipRecILI9341::~clipRecILI9341(void) {  }
+maskableILI9341::~maskableILI9341(void) {  }
 	
-void clipRecILI9341::drawPixel(int16_t x, int16_t y, uint16_t color) {
+void maskableILI9341::drawPixel(int16_t x, int16_t y, uint16_t color) {
 
-	if (!mClipRect) { Adafruit_ILI9341::drawPixel(x,y,color); }
-	else if (mClipRect->inRect(x,y)) { Adafruit_ILI9341::drawPixel(x,y,color); }
+	if (gMask) {
+		if (gMask->checkPixel(x,y)) {
+			Adafruit_ILI9341::drawPixel(x,y,color);
+		}
+	} else {
+		Adafruit_ILI9341::drawPixel(x,y,color);
+	}
 }
 
-void clipRecILI9341::writePixel(int16_t x, int16_t y, uint16_t color) {
 
-	if (!mClipRect) { Adafruit_ILI9341::writePixel(x,y,color); }
-	else if (mClipRect->inRect(x,y)) { Adafruit_ILI9341::writePixel(x,y,color); }
+void maskableILI9341::writePixel(int16_t x, int16_t y, uint16_t color) {
+
+	if (gMask) {
+		if (gMask->checkPixel(x,y)) {
+			Adafruit_ILI9341::writePixel(x,y,color);
+		}
+	} else {
+		Adafruit_ILI9341::writePixel(x,y,color);
+	}
 }
 
 
@@ -35,7 +46,7 @@ void clipRecILI9341::writePixel(int16_t x, int16_t y, uint16_t color) {
 
 
 adafruit_1947_Obj::adafruit_1947_Obj(void)
-:displayObj(true,true,true,true,false) {
+	:displayObj(true,true,true,true,false) {
     
 	cTS			= NULL;
 	theTFT		= NULL;
@@ -74,11 +85,9 @@ rect cRect;
 
 bool adafruit_1947_Obj::dispObjBegin(void) { 
 
-	cRect.setRect(100,100,50,50);
   //theTFT = new Adafruit_ILI9341(cs,LC_DC,rst);
   //theTFT = new ILI9341_t3(cs,LC_DC,rst);
-  theTFT = new clipRecILI9341(cs,rst);
-  //theTFT->setClipRect(&cRect);
+  theTFT = new maskableILI9341(cs,rst);
   if (theTFT!=NULL) {
     cTS = new Adafruit_FT6206();
     if (cTS!=NULL) {
@@ -133,7 +142,7 @@ void adafruit_1947_Obj::drawPixel(int x,int y,colorObj* pColor) { theTFT->drawPi
 	 
 point adafruit_1947_Obj::getPoint(void) {
 
-  TS_Point adaPoint;
+  TS_Point	adaPoint;
   point		lcPoint;
 
   adaPoint = cTS->getPoint();
