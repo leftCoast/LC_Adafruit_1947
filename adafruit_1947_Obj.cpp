@@ -39,6 +39,29 @@ void maskableILI9341::writePixel(int16_t x, int16_t y, uint16_t color) {
 }
 
 
+void maskableILI9341::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+
+	int	lastX;
+	int	lastY;
+	
+	if (gMask) {
+		switch(gMask->checkRect(x,y,w,h)) {
+			case unMasked			: Adafruit_ILI9341::fillRect(x,y,w,h,color); break;
+			case totalMasked		: return;
+			case partialMasked	:
+				lastX = x + w;
+				lastY = y + h;
+				for(int i=y;i<lastY;i++) {
+					for(int j=x;j<=lastX;j++) {
+						drawPixel(j,i,color);
+					}
+				}
+			break;
+		}
+	} else {
+		Adafruit_ILI9341::fillRect(x,y,w,h,color);
+	}
+}
 
 // **********************************************************
 //								adafruit_1947_Obj	
@@ -112,8 +135,6 @@ int adafruit_1947_Obj::width(void)																							{ return theTFT->width(
 int adafruit_1947_Obj::height(void)																							{ return theTFT->height(); }
 void adafruit_1947_Obj::startWrite(void)																					{ theTFT->startWrite(); }
 void adafruit_1947_Obj::endWrite(void)																						{ theTFT->endWrite(); }
-//void adafruit_1947_Obj::startWrite(void) {  }
-//void adafruit_1947_Obj::endWrite(void) {  }
 void adafruit_1947_Obj::setRotation(byte inRotation)																	{ theTFT->setRotation(inRotation); }
 void adafruit_1947_Obj::setTextColor(colorObj* inColor)																{ theTFT->setTextColor(inColor->getColor16()); }
 void adafruit_1947_Obj::setTextColor(colorObj* tColor,colorObj* bColor) 										{ theTFT->setTextColor(tColor->getColor16(),bColor->getColor16()); }

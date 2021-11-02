@@ -13,7 +13,7 @@
 
 // Shield version
 #define ADA_1947_SHIELD_CS		10
-#define ADA_1947_SHIELD_RST	  -1
+#define ADA_1947_SHIELD_RST	-1
 #define ADA_1947_SHIELD_SDCS	4
 
 // Rotation
@@ -36,6 +36,7 @@ class maskableILI9341 :	public Adafruit_ILI9341 {
 	
 	virtual	void drawPixel(int16_t x, int16_t y, uint16_t color);
 	virtual	void writePixel(int16_t x, int16_t y, uint16_t color);
+	virtual	void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
 };
 
 
