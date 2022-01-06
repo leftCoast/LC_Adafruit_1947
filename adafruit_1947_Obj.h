@@ -88,6 +88,7 @@ class adafruit_1947_Obj : public displayObj {
 				byte					rst;
 				bool					lastTouch;
 				int					touchNum;
+				point					lastTouchPt;
 };
 
 #endif

@@ -71,12 +71,14 @@ void maskableILI9341::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint1
 adafruit_1947_Obj::adafruit_1947_Obj(void)
 	:displayObj(true,true,true,true,false) {
     
-	cTS			= NULL;
-	theTFT		= NULL;
-	cs				= ADA_1947_SHIELD_CS;
-	rst			= ADA_1947_SHIELD_RST;
-	lastTouch	= false;
-	touchNum		= 0;
+	cTS				= NULL;
+	theTFT			= NULL;
+	cs					= ADA_1947_SHIELD_CS;
+	rst				= ADA_1947_SHIELD_RST;
+	lastTouch		= false;
+	touchNum			= 0;
+	lastTouchPt.x	= 0;
+	lastTouchPt.y	= 0;
 }
 
 
@@ -104,7 +106,7 @@ adafruit_1947_Obj::~adafruit_1947_Obj(void) {
 	}
 }
 
-rect cRect;
+//rect cRect;
 
 bool adafruit_1947_Obj::dispObjBegin(void) { 
 
@@ -163,31 +165,35 @@ void adafruit_1947_Obj::drawPixel(int x,int y,colorObj* pColor) { theTFT->drawPi
 	 
 point adafruit_1947_Obj::getPoint(void) {
 
-  TS_Point	adaPoint;
-  point		lcPoint;
+	TS_Point	adaPoint;
+	point		lcPoint;
 
-  adaPoint = cTS->getPoint();
-  switch (theTFT->getRotation()) {
-  case INV_PORTRAIT:
-    break;
-  case INV_LANDSCAPE:
-    swap(adaPoint.x,adaPoint.y);
-    adaPoint.x = adaPoint.x;
-    adaPoint.y = theTFT->height() - adaPoint.y;
-    break;
-  case PORTRAIT:
-    adaPoint.x = theTFT->width() - adaPoint.x;
-    adaPoint.y = theTFT->height() - adaPoint.y;
-    break;
-  case LANDSCAPE:
-    swap(adaPoint.x,adaPoint.y);
-    adaPoint.x = theTFT->width() - adaPoint.x;
-    adaPoint.y = adaPoint.y;
-    break;
-  }
-  lcPoint.x = adaPoint.x;
-  lcPoint.y = adaPoint.y;
-  return lcPoint;
+	adaPoint = cTS->getPoint();								// Grab a point from the hardware.
+	if (!adaPoint.z) {											// If the z value is zero..
+		return lastTouchPt;										// Its a bogus touch! Return the last point.
+	}																	//
+	switch (theTFT->getRotation()) {							// For each type of rotation..
+		case INV_PORTRAIT:										// INV_PORTRAIT is what we get by default.
+		break;														// And we waltz off.
+		case INV_LANDSCAPE:										// INV_LANDSCAPE..
+			swap(adaPoint.x,adaPoint.y);						// Swap the x & y of the inputed point.
+			adaPoint.x = adaPoint.x;							// What was I thinking here? replace value with itself?
+			adaPoint.y = theTFT->height() - adaPoint.y;	// Looks like we swap around the y axis.
+		break;														// Time to go. Better test this later, looks odd to me.
+		case PORTRAIT:												// PORTRAIT I know this one works. I use it every damn day.
+			adaPoint.x = theTFT->width() - adaPoint.x;	// Flip around the x axis.
+			adaPoint.y = theTFT->height() - adaPoint.y;	// Flip around the y axis.
+		break;														// And go!
+		case LANDSCAPE:											// LANDSCAPE Another one I need to recheck. Its got some weird stuff in there too!
+			swap(adaPoint.x,adaPoint.y);						// Swap the x & y axis.
+			adaPoint.x = theTFT->width() - adaPoint.x;	// Flip around the new x axis.
+			adaPoint.y = adaPoint.y;							// And I did it again here.. What was I thinking?
+		break;														// Pack your bags and move on!
+	}																	//
+	lcPoint.x = adaPoint.x;										// Load the resulting x value into our lcPoint.		
+	lcPoint.y = adaPoint.y;										// Load the resulting y value into our lcPoint.
+	lastTouchPt = lcPoint;										// Save it for later. (We cover bogus values with this.) I say "we" like anyone else is ever here..
+	return lcPoint;												// And return our result!
 }
 
 
