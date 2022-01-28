@@ -145,7 +145,7 @@ void adafruit_1947_Obj::setTextWrap(boolean wrap)																		{ theTFT->set
 void adafruit_1947_Obj::setFont(const GFXfont* font)																	{ theTFT->setFont(font); }
 //void adafruit_1947_Obj::setFont(const GFXfont* font)																	{ theTFT->setFontAdafruit(); }
 void adafruit_1947_Obj::setCursor(int x,int y)																			{ theTFT->setCursor(gX(x),gY(y)); }
-void adafruit_1947_Obj::drawText(char* inText)																			{ theTFT->print(inText); }
+void adafruit_1947_Obj::drawText(const char* inText)																	{ theTFT->print(inText); }
 void adafruit_1947_Obj::fillScreen(colorObj* inColor)																	{ theTFT->fillScreen(inColor->getColor16()); }
 void adafruit_1947_Obj::fillRect(int x,int y,int width,int height,colorObj* inColor)						{ theTFT->fillRect(gX(x),gY(y),width, height,inColor->getColor16()); }
 void adafruit_1947_Obj::drawRect(int x,int y,int width,int height,colorObj* inColor)						{ theTFT->drawRect(gX(x),gY(y),width, height,inColor->getColor16()); }
