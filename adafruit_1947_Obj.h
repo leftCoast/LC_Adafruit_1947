@@ -22,9 +22,9 @@
 #define INV_PORTRAIT  2  // USB down
 #define INV_LANDSCAPE 3  // USB right
 
-#ifndef swap
-#define swap(a, b) { int16_t t = a; a = b; b = t; }
-#endif
+// #ifndef swap
+// #define swap(a, b) { int16_t t = a; a = b; b = t; }
+// #endif
 
 extern mask* gMask;
 
