@@ -14,7 +14,7 @@
 // Shield version
 #define ADA_1947_SHIELD_CS		10
 #define ADA_1947_SHIELD_RST	-1
-#define ADA_1947_SHIELD_SDCS	4
+#define ADA_1947_SHIELD_SDCS	 4		// 11 is for PiPico 4 is normal.
 
 // Rotation
 #define PORTRAIT      0  // USB up

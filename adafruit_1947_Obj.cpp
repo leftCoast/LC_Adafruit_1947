@@ -67,7 +67,8 @@ void maskableILI9341::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint1
 // **********************************************************
 
 
-void swap(int16_t* a, int16_t* b) {
+// funky swap because of ESP32
+void mswap(int16_t* a, int16_t* b) {
 
 	int16_t t;
 	
@@ -187,7 +188,7 @@ point adafruit_1947_Obj::getPoint(void) {
 		case INV_PORTRAIT:										// INV_PORTRAIT is what we get by default.
 		break;														// And we waltz off.
 		case INV_LANDSCAPE:										// INV_LANDSCAPE..
-			swap(&(adaPoint.x),&(adaPoint.y));				// Swap the x & y of the inputed point.
+			mswap(&(adaPoint.x),&(adaPoint.y));				// Swap the x & y of the inputed point.
 			adaPoint.x = adaPoint.x;							// What was I thinking here? replace value with itself?
 			adaPoint.y = theTFT->height() - adaPoint.y;	// Looks like we swap around the y axis.
 		break;														// Time to go. Better test this later, looks odd to me.
@@ -196,7 +197,7 @@ point adafruit_1947_Obj::getPoint(void) {
 			adaPoint.y = theTFT->height() - adaPoint.y;	// Flip around the y axis.
 		break;														// And go!
 		case LANDSCAPE:											// LANDSCAPE Another one I need to recheck. Its got some weird stuff in there too!
-			swap(&(adaPoint.x),&(adaPoint.y));				// Swap the x & y of the inputed point.
+			mswap(&(adaPoint.x),&(adaPoint.y));				// Swap the x & y of the inputed point.
 			adaPoint.x = theTFT->width() - adaPoint.x;	// Flip around the new x axis.
 			adaPoint.y = adaPoint.y;							// And I did it again here.. What was I thinking?
 		break;														// Pack your bags and move on!
