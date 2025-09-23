@@ -17,8 +17,6 @@
 #define ADA_1947_SHIELD_SDCS	 4		// 11 is for PiPico 4 is normal.
 
 
-extern mask* gMask;
-
 class maskableILI9341 :	public Adafruit_ILI9341 {
 								
 	public :

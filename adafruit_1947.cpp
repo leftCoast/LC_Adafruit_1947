@@ -6,7 +6,6 @@
 //	Adafruit_ILI9341 with the ability to have a mask added.	
 // **********************************************************
 
-mask* gMask = NULL;
 
 maskableILI9341::maskableILI9341(int cs, int rst)
 	: Adafruit_ILI9341(cs,LC_DC,rst) { }
