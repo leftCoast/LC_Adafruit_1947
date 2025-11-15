@@ -1,10 +1,9 @@
 #ifndef adafruit_1947_h
 #define adafruit_1947_h
 
-#include <Wire.h>      			// this is needed for FT6206
+#include <Wire.h>      			// Needed for FT6206
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
-//#include <ILI9341_t3.h>
 #include <Adafruit_FT6206.h>
 #include <LC_SPI.h>
 #include <baseGraphics.h>
@@ -14,7 +13,6 @@
 // Shield version
 #define ADA_1947_SHIELD_CS		10
 #define ADA_1947_SHIELD_RST	-1
-#define ADA_1947_SHIELD_SDCS	 4		// 11 is for PiPico 4 is normal.
 
 
 class maskableILI9341 :	public Adafruit_ILI9341 {
@@ -33,11 +31,11 @@ class maskableILI9341 :	public Adafruit_ILI9341 {
 class adafruit_1947 : public displayObj {
 
 	public :
-				adafruit_1947(void);						// Shield version.
-				adafruit_1947(byte inCS,byte inRst);  // Breakout version.
+				adafruit_1947(void);							// Shield version.
+				adafruit_1947(byte inCS,byte inRst);	// Breakout version.
 	virtual	~adafruit_1947(void);
   
-	virtual	bool	begin(void);
+  	virtual	bool	begin(void);
 	virtual	int	width(void);
 	virtual	int	height(void);
 	virtual	void	startWrite(void);

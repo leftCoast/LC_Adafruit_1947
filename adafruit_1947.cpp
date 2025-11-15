@@ -9,7 +9,7 @@
 
 maskableILI9341::maskableILI9341(int cs, int rst)
 	: Adafruit_ILI9341(cs,LC_DC,rst) { }
-	
+
 	
 maskableILI9341::~maskableILI9341(void) {  }
 	
@@ -109,25 +109,25 @@ adafruit_1947::~adafruit_1947(void) {
 
 bool adafruit_1947::begin(void) { 
 
-  theTFT = new maskableILI9341(cs,rst);
-  if (theTFT!=NULL) {
-    cTS = new Adafruit_FT6206();
-    if (cTS!=NULL) {
-    	theTFT->begin();										// Doesn't have fail mode here.
-    	if (cTS->begin(40)) {								// 40 comes from example code.
-    		return true;
-    	}
-    }
-  }
-  if (theTFT!=NULL) {
-	 delete theTFT;
-	 theTFT = NULL;
-  }
-  if (cTS!=NULL) {
-    delete cTS;
-    cTS = NULL;
-  }
-  return false;
+  theTFT = new maskableILI9341(cs,rst);	// Have a go at allocating the display object.
+  if (theTFT!=NULL) {							// If we got one?
+    cTS = new Adafruit_FT6206();				// Have a go at allocating a touch object.
+    if (cTS!=NULL) {								// We got both now?
+    	theTFT->begin();							// Fire up the TFT. Doesn't have fail mode here.
+    	if (cTS->begin(40)) {					// 40 comes from example code.
+    		return true;							// If everything checks out? We exit with a success.
+    	}												//
+    }													//
+  }													// At this point something went wrong. Recycle everything.
+  if (theTFT!=NULL) {							// Have a TFT thing?
+	 delete theTFT;								// Delete it.
+	 theTFT = NULL;								// Note it.
+  }													// 
+  if (cTS!=NULL) {								// Have a touch object?
+    delete cTS;									// Delete it.
+    cTS = NULL;									// Note it.
+  }													//
+  return false;									// Return false, we failed.
 }
 
 
@@ -137,26 +137,25 @@ void adafruit_1947::startWrite(void)																					{ theTFT->startWrite();
 void adafruit_1947::endWrite(void)																						{ theTFT->endWrite(); }
 void adafruit_1947::setRotation(byte inRotation)																	{ theTFT->setRotation(inRotation); }
 void adafruit_1947::setTextColor(colorObj* inColor)																{ theTFT->setTextColor(inColor->getColor16()); }
-void adafruit_1947::setTextColor(colorObj* tColor,colorObj* bColor) 										{ theTFT->setTextColor(tColor->getColor16(),bColor->getColor16()); }
-void adafruit_1947::setTextSize(byte inSize)																		{ theTFT->setTextSize(inSize); }
+void adafruit_1947::setTextColor(colorObj* tColor,colorObj* bColor) 											{ theTFT->setTextColor(tColor->getColor16(),bColor->getColor16()); }
+void adafruit_1947::setTextSize(byte inSize)																			{ theTFT->setTextSize(inSize); }
 void adafruit_1947::setTextWrap(boolean wrap)																		{ theTFT->setTextWrap(wrap); }
 void adafruit_1947::setFont(const GFXfont* font)																	{ theTFT->setFont(font); }
-//void adafruit_1947::setFont(const GFXfont* font)																	{ theTFT->setFontAdafruit(); }
 void adafruit_1947::setCursor(int x,int y)																			{ theTFT->setCursor(gX(x),gY(y)); }
 void adafruit_1947::drawText(const char* inText)																	{ theTFT->print(inText); }
 void adafruit_1947::fillScreen(colorObj* inColor)																	{ theTFT->fillScreen(inColor->getColor16()); }
-void adafruit_1947::fillRect(int x,int y,int width,int height,colorObj* inColor)						{ theTFT->fillRect(gX(x),gY(y),width, height,inColor->getColor16()); }
-void adafruit_1947::drawRect(int x,int y,int width,int height,colorObj* inColor)						{ theTFT->drawRect(gX(x),gY(y),width, height,inColor->getColor16()); }
+void adafruit_1947::fillRect(int x,int y,int width,int height,colorObj* inColor)							{ theTFT->fillRect(gX(x),gY(y),width, height,inColor->getColor16()); }
+void adafruit_1947::drawRect(int x,int y,int width,int height,colorObj* inColor)							{ theTFT->drawRect(gX(x),gY(y),width, height,inColor->getColor16()); }
 void adafruit_1947::fillRect(rect* inRect,colorObj* inColor)													{ theTFT->fillRect(gX(inRect->x),gY(inRect->y),inRect->width, inRect->height,inColor->getColor16()); }
 void adafruit_1947::drawRect(rect* inRect,colorObj* inColor)													{ theTFT->drawRect(gX(inRect->x),gY(inRect->y),inRect->width, inRect->height,inColor->getColor16()); }
 void adafruit_1947::fillRoundRect(int x,int y,int width,int height,int radius,colorObj* inColor)	{ theTFT->fillRoundRect(gX(x),gY(y),width,height,radius,inColor->getColor16()); }
 void adafruit_1947::drawRoundRect(int x,int y,int width,int height,int radius,colorObj* inColor)	{ theTFT->drawRoundRect(gX(x),gY(y),width,height,radius,inColor->getColor16()); }
-void adafruit_1947::drawCircle(int x,int y,int diam, colorObj* inColor)									{ drawRoundRect(gX(x),gY(y),diam,diam,diam/2,inColor); }
+void adafruit_1947::drawCircle(int x,int y,int diam, colorObj* inColor)										{ drawRoundRect(gX(x),gY(y),diam,diam,diam/2,inColor); }
 void adafruit_1947::drawCircleHelper(int x,int y,int rad,byte corner,colorObj* inColor)				{ theTFT->drawCircleHelper(gX(x),gY(y),rad,corner,inColor->getColor16()); }
-void adafruit_1947::fillCircle(int x,int y,int diam, colorObj* inColor)									{ fillRoundRect(gX(x),gY(y),diam,diam,diam/2,inColor); }
+void adafruit_1947::fillCircle(int x,int y,int diam, colorObj* inColor)										{ fillRoundRect(gX(x),gY(y),diam,diam,diam/2,inColor); }
 void adafruit_1947::drawTriangle(point* pt0,point* pt1,point* pt2,colorObj* inColor) 					{ theTFT->drawTriangle(gP(pt0).x,gP(pt0).y,gP(pt1).x,gP(pt1).y,gP(pt2).x,gP(pt2).y,inColor->getColor16()); }
 void adafruit_1947::fillTriangle(point* pt0,point* pt1,point* pt2,colorObj* inColor)					{ theTFT->fillTriangle(gP(pt0).x,gP(pt0).y,gP(pt1).x,gP(pt1).y,gP(pt2).x,gP(pt2).y,inColor->getColor16()); }
-void adafruit_1947::drawVLine(int x,int y,int height,colorObj* inColor)									{ theTFT->drawFastVLine(gX(x),gY(y),height,inColor->getColor16()); }
+void adafruit_1947::drawVLine(int x,int y,int height,colorObj* inColor)										{ theTFT->drawFastVLine(gX(x),gY(y),height,inColor->getColor16()); }
 void adafruit_1947::drawHLine(int x,int y,int width,colorObj* inColor)										{ theTFT->drawFastHLine(gX(x),gY(y),width,inColor->getColor16()); }
 void adafruit_1947::drawLine(int x,int y,int x2,int y2,colorObj* inColor)									{ theTFT->drawLine(gX(x),gY(y),gX(x2),gY(y2),inColor->getColor16()); }
 void adafruit_1947::drawPixel(int x,int y,colorObj* inColor)													{ theTFT->drawPixel(gX(x),gY(y),inColor->getColor16()); }
@@ -192,7 +191,6 @@ point adafruit_1947::getPoint(void) {
 	lastTouchPt = lcPoint;										// Save it for later. (We cover bogus values with this.) I say "we" like anyone else is ever here..
 	return lcPoint;												// And return our result!
 }
-
 
 
 bool adafruit_1947::touched(void) { return cTS->touched(); }
