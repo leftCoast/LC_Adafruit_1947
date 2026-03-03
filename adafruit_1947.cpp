@@ -133,8 +133,6 @@ bool adafruit_1947::begin(void) {
 
 int adafruit_1947::width(void)																							{ return theTFT->width(); }
 int adafruit_1947::height(void)																							{ return theTFT->height(); }
-void adafruit_1947::startWrite(void)																					{ theTFT->startWrite(); }
-void adafruit_1947::endWrite(void)																						{ theTFT->endWrite(); }
 void adafruit_1947::setRotation(byte inRotation)																	{ theTFT->setRotation(inRotation); }
 void adafruit_1947::setTextColor(colorObj* inColor)																{ theTFT->setTextColor(inColor->getColor16()); }
 void adafruit_1947::setTextColor(colorObj* tColor,colorObj* bColor) 											{ theTFT->setTextColor(tColor->getColor16(),bColor->getColor16()); }
